@@ -1,3 +1,129 @@
+# Captain Registration Endpoint Documentation
+
+## Endpoint
+
+`POST /captains/register`
+
+## Method
+
+**POST**
+
+## Description
+
+Registers a new captain (driver) in the system. On successful registration, returns the created captain object.
+
+## Request Body
+
+Send a JSON object with the following structure:
+
+```json
+{
+  "fullname": {
+    "firstname": "Ali",
+    "lastname": "Khan"
+  },
+  "email": "ali.khan@example.com",
+  "password": "yourpassword",
+  "vehicle": {
+    "color": "Red",
+    "plate": "ABC123",
+    "capacity": 4,
+    "vehicleType": "car"
+  }
+}
+```
+
+### Field Requirements
+
+- `fullname.firstname` (string, required): Minimum 3 characters.
+- `fullname.lastname` (string, optional): Minimum 3 characters if provided.
+- `email` (string, required): Must be a valid email address.
+- `password` (string, required): Minimum 6 characters.
+- `vehicle.color` (string, required): Minimum 3 characters.
+- `vehicle.plate` (string, required): Minimum 3 characters.
+- `vehicle.capacity` (number, required): Must be a number.
+- `vehicle.vehicleType` (string, required): Must be one of `car`, `motorcycle`, or `auto`.
+
+## Responses
+
+### Success
+
+- **Status Code:** `201 Created`
+- **Body:**
+  ```json
+  {
+    "_id": "6640c1e2f8c1a2b0012345678",
+    "fullname": {
+      "firstname": "Ali",
+      "lastname": "Khan"
+    },
+    "email": "ali.khan@example.com",
+    "vehicle": {
+      "color": "Red",
+      "plate": "ABC123",
+      "capacity": 4,
+      "vehicleType": "car"
+    }
+    // ...other fields
+  }
+  ```
+
+### Validation Error
+
+- **Status Code:** `400 Bad Request`
+- **Body:**
+  ```json
+  {
+    "errors": [
+      {
+        "msg": "First name must be at least 3 characters long",
+        "param": "fullname.firstname",
+        "location": "body"
+      }
+      // ...other errors
+    ]
+  }
+  ```
+
+### Example Request
+
+```bash
+curl -X POST http://localhost:3000/captains/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "fullname": { "firstname": "Ali", "lastname": "Khan" },
+    "email": "ali.khan@example.com",
+    "password": "yourpassword",
+    "vehicle": {
+      "color": "Red",
+      "plate": "ABC123",
+      "capacity": 4,
+      "vehicleType": "car"
+    }
+  }'
+```
+
+### Example Success Response
+
+```json
+{
+  "_id": "6640c1e2f8c1a2b0012345678",
+  "fullname": {
+    "firstname": "Ali",
+    "lastname": "Khan"
+  },
+  "email": "ali.khan@example.com",
+  "vehicle": {
+    "color": "Red",
+    "plate": "ABC123",
+    "capacity": 4,
+    "vehicleType": "car"
+  }
+}
+```
+
+---
+
 # User Registration Endpoint Documentation
 
 ## Endpoint
