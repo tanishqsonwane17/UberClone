@@ -206,3 +206,109 @@ curl -X POST http://localhost:3000/users/login \
 ```
 
 ---
+
+# User Profile Endpoint Documentation
+
+## Endpoint
+
+`GET /users/profile`
+
+## Method
+
+**GET**
+
+## Description
+
+Returns the authenticated user's profile information. Requires a valid JWT token in the `Authorization` header or as a cookie.
+
+## Authentication
+
+- **Header:** `Authorization: Bearer <token>`
+- **Or Cookie:** `token=<token>`
+
+## Responses
+
+### Success
+
+- **Status Code:** `200 OK`
+- **Body:**
+  ```json
+  {
+    "_id": "663b1e2f8c1a2b0012345678",
+    "fullname": {
+      "firstname": "John",
+      "lastname": "Doe"
+    },
+    "email": "johndoe@example.com",
+    "socketId": "optional-socket-id"
+  }
+  ```
+
+### Unauthorized
+
+- **Status Code:** `401 Unauthorized`
+- **Body:**
+  ```json
+  {
+    "message": "Unauthorized"
+  }
+  ```
+
+### Example Request
+
+```bash
+curl -X GET http://localhost:3000/users/profile \
+  -H "Authorization: Bearer <your_jwt_token>"
+```
+
+---
+
+# User Logout Endpoint Documentation
+
+## Endpoint
+
+`GET /users/logout`
+
+## Method
+
+**GET**
+
+## Description
+
+Logs out the authenticated user by blacklisting the current JWT token and clearing the authentication cookie.
+
+## Authentication
+
+- **Header:** `Authorization: Bearer <token>`
+- **Or Cookie:** `token=<token>`
+
+## Responses
+
+### Success
+
+- **Status Code:** `200 OK`
+- **Body:**
+  ```json
+  {
+    "message": "Logout successful"
+  }
+  ```
+
+### Unauthorized
+
+- **Status Code:** `401 Unauthorized`
+- **Body:**
+  ```json
+  {
+    "message": "Unauthorized"
+  }
+  ```
+
+### Example Request
+
+```bash
+curl -X GET http://localhost:3000/users/logout \
+  -H "Authorization: Bearer <your_jwt_token>"
+```
+
+---
