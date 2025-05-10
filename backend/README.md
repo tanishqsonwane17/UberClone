@@ -1,57 +1,36 @@
-# Captain Registration Endpoint Documentation
+# Captain Routes Documentation
 
-## Endpoint
+## Captain Registration
+
+### Endpoint
 
 `POST /captains/register`
 
-## Method
-
-**POST**
-
-## Description
-
-Registers a new captain (driver) in the system. On successful registration, returns the created captain object.
-
-## Request Body
-
-Send a JSON object with the following structure:
+### Request Body
 
 ```json
 {
   "fullname": {
-    "firstname": "Ali",
-    "lastname": "Khan"
+    "firstname": "Ali",         // required, min 3 chars
+    "lastname": "Khan"          // optional, min 3 chars if provided
   },
-  "email": "ali.khan@example.com",
-  "password": "yourpassword",
+  "email": "ali.khan@example.com", // required, valid email
+  "password": "yourpassword",      // required, min 6 chars
   "vehicle": {
-    "color": "Red",
-    "plate": "ABC123",
-    "capacity": 4,
-    "vehicleType": "car"
+    "color": "Red",                // required, min 3 chars
+    "plate": "ABC123",             // required, min 3 chars
+    "capacity": 4,                 // required, number
+    "vehicleType": "car"           // required, one of: car, motorcycle, auto
   }
 }
 ```
 
-### Field Requirements
+### Success Response
 
-- `fullname.firstname` (string, required): Minimum 3 characters.
-- `fullname.lastname` (string, optional): Minimum 3 characters if provided.
-- `email` (string, required): Must be a valid email address.
-- `password` (string, required): Minimum 6 characters.
-- `vehicle.color` (string, required): Minimum 3 characters.
-- `vehicle.plate` (string, required): Minimum 3 characters.
-- `vehicle.capacity` (number, required): Must be a number.
-- `vehicle.vehicleType` (string, required): Must be one of `car`, `motorcycle`, or `auto`.
-
-## Responses
-
-### Success
-
-- **Status Code:** `201 Created`
-- **Body:**
-  ```json
-  {
+```json
+{
+  "token": "jwt_token_here",
+  "captain": {
     "_id": "6640c1e2f8c1a2b0012345678",
     "fullname": {
       "firstname": "Ali",
@@ -66,59 +45,139 @@ Send a JSON object with the following structure:
     }
     // ...other fields
   }
-  ```
+}
+```
 
 ### Validation Error
 
-- **Status Code:** `400 Bad Request`
-- **Body:**
-  ```json
-  {
-    "errors": [
-      {
-        "msg": "First name must be at least 3 characters long",
-        "param": "fullname.firstname",
-        "location": "body"
-      }
-      // ...other errors
-    ]
-  }
-  ```
+```json
+{
+  "errors": [
+    {
+      "msg": "First name must be at least 3 characters long", // example error
+      "param": "fullname.firstname",
+      "location": "body"
+    }
+    // ...other errors
+  ]
+}
+```
 
-### Example Request
+---
 
-```bash
-curl -X POST http://localhost:3000/captains/register \
-  -H "Content-Type: application/json" \
-  -d '{
-    "fullname": { "firstname": "Ali", "lastname": "Khan" },
+## Captain Login
+
+### Endpoint
+
+`POST /captains/login`
+
+### Request Body
+
+```json
+{
+  "email": "ali.khan@example.com", // required, valid email
+  "password": "yourpassword"       // required, min 6 chars
+}
+```
+
+### Success Response
+
+```json
+{
+  "token": "jwt_token_here",
+  "captain": {
+    "_id": "6640c1e2f8c1a2b0012345678",
+    "fullname": {
+      "firstname": "Ali",
+      "lastname": "Khan"
+    },
     "email": "ali.khan@example.com",
-    "password": "yourpassword",
     "vehicle": {
       "color": "Red",
       "plate": "ABC123",
       "capacity": 4,
       "vehicleType": "car"
     }
-  }'
+    // ...other fields
+  }
+}
 ```
 
-### Example Success Response
+### Error Response
 
 ```json
 {
-  "_id": "6640c1e2f8c1a2b0012345678",
-  "fullname": {
-    "firstname": "Ali",
-    "lastname": "Khan"
-  },
-  "email": "ali.khan@example.com",
-  "vehicle": {
-    "color": "Red",
-    "plate": "ABC123",
-    "capacity": 4,
-    "vehicleType": "car"
+  "message": "Invalid email or password"
+}
+```
+
+---
+
+## Captain Profile
+
+### Endpoint
+
+`GET /captains/profile`
+
+### Headers
+
+- `Authorization: Bearer <jwt_token>` (required)
+
+### Success Response
+
+```json
+{
+  "captain": {
+    "_id": "6640c1e2f8c1a2b0012345678",
+    "fullname": {
+      "firstname": "Ali",
+      "lastname": "Khan"
+    },
+    "email": "ali.khan@example.com",
+    "vehicle": {
+      "color": "Red",
+      "plate": "ABC123",
+      "capacity": 4,
+      "vehicleType": "car"
+    }
+    // ...other fields
   }
+}
+```
+
+### Unauthorized Response
+
+```json
+{
+  "message": "Unauthorized"
+}
+```
+
+---
+
+## Captain Logout
+
+### Endpoint
+
+`GET /captains/logout`
+
+### Headers
+
+- `Authorization: Bearer <jwt_token>` (required)
+
+### Success Response
+
+```json
+{
+  "message": "Logged out successfully"
+}
+```
+
+### Unauthorized Response
+
+```json
+{
+  "message": "Unauthorized"
 }
 ```
 
