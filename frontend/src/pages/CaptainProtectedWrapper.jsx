@@ -40,6 +40,5 @@ export const CaptainProtectedWrapper = ({ children }) => {
   if (isLoading) {
     return <div>Loading...</div>;
   }
-
   return <div>{children}</div>;
 };
