@@ -8,7 +8,6 @@ module.exports.register = async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  console.log(req.body);
   const { fullname, email, password } = req.body;
   const isUserExist = await userModel.findOne({ email });
   if (isUserExist) {
