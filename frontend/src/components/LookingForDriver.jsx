@@ -33,7 +33,6 @@ const LookingForDriver = (props) => {
               <h3 className='text-lg font-medium'>₹ 193.20</h3>
               <p  className='-mt-1 text-gray-600 text-sm'>Cash Cash</p>
             </div>
-
             </div>
         </div>
       </div>
