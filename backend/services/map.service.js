@@ -1,31 +1,38 @@
 const axios = require("axios");
 
-const getAddressCoordinates = async (address) => {
+async function getAddressCoordinates(address) {
   try {
     const response = await axios.get("https://nominatim.openstreetmap.org/search", {
       params: {
         q: address,
         format: "json",
-        limit: 1,
+        limit: 1
       },
       headers: {
-        "User-Agent": "YourAppName/1.0" // required for Nominatim
+        "User-Agent": "MyApp/1.0 (your-email@example.com)" // required for Nominatim
       }
     });
 
-    if (response.data.length === 0) {
-      return null;
+    if (!response.data || response.data.length === 0) {
+      return {
+        success: false,
+        message: "Address not found"
+      };
     }
 
-    const location = response.data[0];
+    const place = response.data[0];
     return {
-      lat: location.lat,
-      lon: location.lon,
-      displayName: location.display_name,
+      success: true,
+      lat: place.lat,
+      lon: place.lon
     };
   } catch (error) {
-    throw new Error("Error fetching coordinates");
+    return {
+      success: false,
+      message: "Internal Server Error",
+      error: error.message
+    };
   }
-};
+}
 
 module.exports = { getAddressCoordinates };
