@@ -49,4 +49,28 @@ const getDistanceTime = async (req, res) => {
   }
 };
 
-module.exports = { getCoordinates, getDistanceTime };
+const getAutoSuggestions = async (req, res) => {
+  try {
+    const { input } = req.query;
+
+    if (!input) {
+      return res.status(400).json({ success: false, message: "Query input is required" });
+    }
+
+    const suggestions = await mapService.getAutoCompleteSuggestions(input);
+
+    if (!suggestions.success) {
+      return res.status(404).json({ success: false, message: suggestions.message });
+    }
+
+    res.json(suggestions);
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      error: error.message
+    });
+  }
+};
+
+module.exports = { getCoordinates, getDistanceTime, getAutoSuggestions };
