@@ -117,9 +117,7 @@ async function getAutoCompleteSuggestions(input) {
 module.exports = {
   getAddressCoordinates,
   getDistanceTime,
-  getAutoCompleteSuggestions // ✅ add this
+  getAutoCompleteSuggestions 
 };
 
 module.exports = { getAddressCoordinates, getDistanceTime, getAutoCompleteSuggestions };
-
-
