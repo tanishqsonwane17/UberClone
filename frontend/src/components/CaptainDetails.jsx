@@ -6,7 +6,7 @@ const CaptainDetails = () => {
                <div className='flex items-center justify-between'>
             <div className='flex items-center justify-start gap-3'>
               <img className='h-10 w-10 rounded-full object-cover' src="https://images.unsplash.com/photo-1618306842557-a2515acf2112?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" />
-              <h4 className='text-lg font-medium'>Tanishq Sonwane</h4>
+              <h4 className='text-lg font-medium'>Bixi </h4>
             </div>
             <div>
               <h5 className='text-xl font-semibold'>₹295.2</h5>

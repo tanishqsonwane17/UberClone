@@ -19,7 +19,7 @@ const RidePopup = (props) => {
             src="https://images.unsplash.com/photo-1618306842557-a2515acf2112?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
             alt=""
           />
-          <h2 className="text-lg font-medium">Tanishq Sonwane</h2>
+          <h2 className="text-lg font-medium">Bixi </h2>
         </div>
         <h5 className="text-lg font-semibold">2.2 KM</h5>
       </div>
