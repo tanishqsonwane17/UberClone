@@ -7,17 +7,19 @@ connecToDb()
 const userRoute = require('./routes/user.routes')
 const captainRoute = require('./routes/captain.routes')
 const mapsRoute = require('./routes/maps.routes')
+const rideRoutes = require('./routes/ride.routes')
 const cors = require('cors')
 const cookieParser = require('cookie-parser')
 app.use(cookieParser())
 app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
-app.use('/maps',mapsRoute)
+
 app.get('/',function(req,res){
     res.send('helo world')
 })
 app.use('/captains',captainRoute)
 app.use('/users',userRoute)
-
+app.use('/maps',mapsRoute)
+app.use('/rides',rideRoutes)
 module.exports = app
