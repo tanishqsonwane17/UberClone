@@ -34,10 +34,9 @@ async function getAddressCoordinates(address) {
   }
 }
 
-// ✅ Distance & Time between 2 addresses
+
 async function getDistanceTime(origin, destination) {
   try {
-    // Get coordinates of origin and destination
     const originCoords = await getAddressCoordinates(origin);
     const destCoords = await getAddressCoordinates(destination);
 
@@ -45,7 +44,6 @@ async function getDistanceTime(origin, destination) {
       return { success: false, message: "Invalid origin or destination" };
     }
 
-    // OSRM Routing API (car mode)
     const url = `http://router.project-osrm.org/route/v1/driving/${originCoords.lon},${originCoords.lat};${destCoords.lon},${destCoords.lat}?overview=false`;
 
     const response = await axios.get(url);
@@ -57,15 +55,20 @@ async function getDistanceTime(origin, destination) {
     const route = response.data.routes[0];
 
     return {
-      success: true,
-      origin: originCoords.displayName,
-      destination: destCoords.displayName,
-      distance: (route.distance / 1000).toFixed(2) + " km", // meters → km
-      duration: (route.duration / 60).toFixed(2) + " mins" // seconds → mins
+      status: "OK",  // ✅ added status like Google
+      distance: {
+        text: (route.distance / 1000).toFixed(2) + " km", // readable
+        value: route.distance // meters
+      },
+      duration: {
+        text: (route.duration / 60).toFixed(2) + " mins", // readable
+        value: route.duration // seconds
+      }
     };
   } catch (error) {
     return {
       success: false,
+      status: "ERROR",
       message: "Error fetching distance & time",
       error: error.message
     };
@@ -73,3 +76,5 @@ async function getDistanceTime(origin, destination) {
 }
 
 module.exports = { getAddressCoordinates, getDistanceTime };
+
+
