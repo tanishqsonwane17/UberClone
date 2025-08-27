@@ -14,6 +14,8 @@ const Home = () => {
   const [activeField, setActiveField] = useState("");
   const [panelOpen, setpanelOpen] = useState(false);
   const [vehicleType, setVehicleType] = useState("");
+  const [fares, setFares] = useState({ car: 0, moto: 0, auto: 0 });
+  const [loadingFares, setLoadingFares] = useState(false);
   const vehiclePanelRef = useRef(null);
   const confimRidePanelRef = useRef(null);
   const vehicleFoundRef = useRef(null);
@@ -36,32 +38,29 @@ async function findTrip() {
     return;
   }
 
-  const vehicleTypes = ["car", "auto", "moto"]; // tino vehicles
+  setLoadingFares(true); // ⬅️ loading start
 
   try {
-    const fares = await Promise.all(
-      vehicleTypes.map(async (type) => {
-        const res = await fetch("http://localhost:3000/rides/get-fare", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ pickup, destination, vehicleType: type }),
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message || "Error fetching fare");
-        return { type, fare: data.fare };
-      })
-    );
+    const vehicleTypes = ["car", "moto", "auto"];
+    const newFares = {};
 
-    console.log("All fares:", fares);
-    // ✅ Example: [{type: "car", fare: 123}, {type: "auto", fare: 190}, {type: "moto", fare: 90}]
-    alert(`Fares:\nCar: ₹${fares[0].fare}\nAuto: ₹${fares[1].fare}\nMoto: ₹${fares[2].fare}`);
+    for (let type of vehicleTypes) {
+      const res = await fetch("http://localhost:3000/rides/get-fare", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pickup, destination, vehicleType: type }),
+      });
+      const data = await res.json();
+      newFares[type] = res.ok ? data.fare : 0;
+    }
+
+    setFares(newFares);
   } catch (err) {
     console.error(err);
-    alert("Something went wrong while fetching fares");
+  } finally {
+    setLoadingFares(false); // ⬅️ loading end
   }
 }
-
-
 
   useGSAP(() => {
     if (panelOpen) {
@@ -212,7 +211,12 @@ async function findTrip() {
 />          </div>
         </div>
         <div ref={vehiclePanelRef} className="fixed w-full z-10 bg-white bottom-0 translate-y-full px-3 py-10 pt-12" >
-          <VehiclePanel setconfimRidePanel = {setconfimRidePanel} setvehiclePanel={setvehiclePanel} />
+<VehiclePanel 
+  fares={fares}
+  loadingFares={loadingFares}
+  setconfimRidePanel={setconfimRidePanel}
+  setvehiclePanel={setvehiclePanel}
+/>
         </div>
         <div ref={confimRidePanelRef} className="fixed w-full z-10 bg-white bottom-0 translate-y-full px-3 py-6 pt-12"> 
           <ConfirmRide setconfimRidePanel = {setconfimRidePanel} setvehicleFound = {setvehicleFound}/>

@@ -9,7 +9,6 @@ async function getFlare(pickup, destination, vehicleType) {
 
   const distanceTime = await mapService.getDistanceTime(pickup, destination);
 
-  // ✅ Safety check before accessing values
   if (!distanceTime || distanceTime.status !== "OK" ||
       !distanceTime.distance?.value || !distanceTime.duration?.value) {
     throw new Error("Unable to fetch distance and duration");
@@ -29,21 +28,15 @@ async function getFlare(pickup, destination, vehicleType) {
 
   return parseFloat(totalFare.toFixed(2));
 }
-
-
   return fare;
 }
 module.exports.getFlare = getFlare;
-
-
-
 async function getOtp(num){
 function generateOtp() {
      return crypto.randomInt(100000, 999999).toString();
 }
 return generateOtp();
 }
-
 module.exports.createRide = async ({ user, pickup, destination, vehicleType }) => {
   if (!user || !pickup || !destination || !vehicleType) {
     throw new Error('all fields are required');

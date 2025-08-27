@@ -1,4 +1,6 @@
 import React from 'react';
+import { useState } from 'react';
+
 
 const VehiclePanel = (props) => {
   return (
@@ -12,7 +14,6 @@ const VehiclePanel = (props) => {
 
       <h3 className="text-2xl font-semibold mb-5 mt-10">Choose a vehicle</h3>
 
-      {/* UberGo */}
       <div onClick={()=>{
         props.setconfimRidePanel(true);
       }} className="active:border-2 mb-2 rounded-xl flex w-full p-3 items-center justify-between">
@@ -28,7 +29,9 @@ const VehiclePanel = (props) => {
           <h5 className="font-medium text-ms">2 mins away</h5>
           <p className="font-normal text-xs text-gray-600">Affordable, compact rides</p>
         </div>
-        <h2 className="text-xl font-semibold">₹193.20</h2>
+<h2 className={`text-xl font-semibold ${props.loadingFares ? 'bg-gray-300 rounded w-20 h-6 animate-pulse' : ''}`}>
+  {props.loadingFares ? '' : `₹${props.fares.car}`}
+</h2>
       </div>
 
       {/* Moto */}
@@ -47,7 +50,10 @@ const VehiclePanel = (props) => {
           <h5 className="font-medium text-ms">3 mins away</h5>
           <p className="font-normal text-xs text-gray-600">Affordable, motorcycle rides</p>
         </div>
-        <h2 className="text-xl font-semibold">₹65.70</h2>
+        <h2 className={`text-xl font-semibold ${props.loadingFares ? 'bg-gray-300 rounded w-20 h-6 animate-pulse' : ''}`}>
+  {props.loadingFares ? '' : `₹${props.fares.moto}`}
+</h2>
+
       </div>
 
       {/* UberAuto */}
@@ -66,7 +72,10 @@ const VehiclePanel = (props) => {
           <h5 className="font-medium text-ms">2 mins away</h5>
           <p className="font-normal text-xs text-gray-600">Affordable, auto rides</p>
         </div>
-        <h2 className="text-xl font-semibold">₹118.68</h2>
+       <h2 className={`text-xl font-semibold ${props.loadingFares ? 'bg-gray-300 rounded w-20 h-6 animate-pulse' : ''}`}>
+  {props.loadingFares ? '' : `₹${props.fares.auto}`}
+</h2>
+
       </div>
     </div>
   );
