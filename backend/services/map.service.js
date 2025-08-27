@@ -33,7 +33,6 @@ async function getAddressCoordinates(address) {
   }
 }
 
-// ✅ Final getDistanceTime
 async function getDistanceTime(origin, destination) {
   try {
     const originCoords = await getAddressCoordinates(origin);
@@ -71,5 +70,28 @@ async function getDistanceTime(origin, destination) {
     };
   }
 }
+async function getAutoCompleteSuggestions(input) {
+  try {
+    const response = await axios.get("https://nominatim.openstreetmap.org/search", {
+      params: {
+        q: input,
+        format: "json",
+        addressdetails: 1,
+        limit: 5,
+      },
+      headers: { "User-Agent": "MyApp/1.0 (your-email@example.com)" }
+    });
 
-module.exports = { getDistanceTime, getAddressCoordinates };
+    if (!response.data || response.data.length === 0) {
+      return { success: false, message: "No suggestions found" };
+    }
+
+    const suggestions = response.data.map((place) => place.display_name);
+
+    return { success: true, suggestions };
+  } catch (error) {
+    return { success: false, message: "Error fetching suggestions", error: error.message };
+  }
+}
+
+module.exports = { getDistanceTime, getAddressCoordinates, getAutoCompleteSuggestions };
