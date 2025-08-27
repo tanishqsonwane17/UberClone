@@ -13,6 +13,7 @@ const Home = () => {
   const [destination, setDestination] = useState("");
   const [activeField, setActiveField] = useState("");
   const [panelOpen, setpanelOpen] = useState(false);
+  const [vehicleType, setVehicleType] = useState("");
   const vehiclePanelRef = useRef(null);
   const confimRidePanelRef = useRef(null);
   const vehicleFoundRef = useRef(null);
@@ -30,37 +31,36 @@ async function findTrip() {
   setvehiclePanel(true);
   setpanelOpen(false);
 
-  const vehicleType = "car"; // ya user selection se le sakte ho
-
-  console.log({ pickup, destination, vehicleType }); // ✅ yaha daal do
-
   if (!pickup || !destination) {
     alert("Please enter pickup and destination");
     return;
   }
 
-  try {
-    const res = await fetch("http://localhost:3000/rides/get-fare", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ pickup, destination, vehicleType })
-    });
+  const vehicleTypes = ["car", "auto", "moto"]; // tino vehicles
 
-    const data = await res.json();
-    if (res.ok) {
-      alert(`Estimated Fare: ₹${data.fare}`);
-      console.log("Fare:", data.fare);
-    } else {
-      console.error(data.message || data.errors);
-      alert(`Error: ${data.message || "Check console"}`);
-    }
+  try {
+    const fares = await Promise.all(
+      vehicleTypes.map(async (type) => {
+        const res = await fetch("http://localhost:3000/rides/get-fare", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ pickup, destination, vehicleType: type }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || "Error fetching fare");
+        return { type, fare: data.fare };
+      })
+    );
+
+    console.log("All fares:", fares);
+    // ✅ Example: [{type: "car", fare: 123}, {type: "auto", fare: 190}, {type: "moto", fare: 90}]
+    alert(`Fares:\nCar: ₹${fares[0].fare}\nAuto: ₹${fares[1].fare}\nMoto: ₹${fares[2].fare}`);
   } catch (err) {
     console.error(err);
-    alert("Something went wrong while fetching fare");
+    alert("Something went wrong while fetching fares");
   }
 }
+
 
 
   useGSAP(() => {
@@ -193,6 +193,7 @@ async function findTrip() {
 />
 
             </form>
+            
             <button
             onClick={findTrip}
             className="bg-black text-white px-4 py-2 rounded-lg w-full mt-4">

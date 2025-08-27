@@ -18,18 +18,18 @@ async function getFlare(pickup, destination, vehicleType) {
   const fare = calculateFare(distanceTime.distance.value, distanceTime.duration.value, vehicleType);
 
   function calculateFare(distance, duration, vehicleType) {
-    const baseFare = 40;
-    const ratePerKm = 8;
-    const ratePerMin = 0.5;
+  const baseFare = 40;
+  const ratePerKm = { car: 8, auto: 6, moto: 5 }; // 🚀 alag rates
+  const ratePerMin = { car: 0.5, auto: 0.4, moto: 0.3 };
 
-    const distanceFare = (distance / 1000) * ratePerKm;
-    const durationFare = (duration / 60) * ratePerMin;
-    let totalFare = baseFare + distanceFare + durationFare;
+  const distanceFare = (distance / 1000) * ratePerKm[vehicleType];
+  const durationFare = (duration / 60) * ratePerMin[vehicleType];
 
-    if (vehicleType === "auto") totalFare *= 1.5;
+  let totalFare = baseFare + distanceFare + durationFare;
 
-    return parseFloat(totalFare.toFixed(2)); // 2 decimal points
-  }
+  return parseFloat(totalFare.toFixed(2));
+}
+
 
   return fare;
 }
