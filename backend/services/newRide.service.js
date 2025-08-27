@@ -33,6 +33,8 @@ async function getFlare(pickup, destination, vehicleType) {
 
   return fare;
 }
+module.exports.getFlare = getFlare;
+
 
 
 async function getOtp(num){

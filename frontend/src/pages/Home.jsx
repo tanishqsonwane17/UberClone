@@ -26,10 +26,43 @@ const Home = () => {
   const submitHandler = (e) => {
     e.preventDefault();
   };
-function findTrip(){
-  setvehiclePanel(true)
-  setpanelOpen(false)
+async function findTrip() {
+  setvehiclePanel(true);
+  setpanelOpen(false);
+
+  const vehicleType = "car"; // ya user selection se le sakte ho
+
+  console.log({ pickup, destination, vehicleType }); // ✅ yaha daal do
+
+  if (!pickup || !destination) {
+    alert("Please enter pickup and destination");
+    return;
+  }
+
+  try {
+    const res = await fetch("http://localhost:3000/rides/get-fare", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ pickup, destination, vehicleType })
+    });
+
+    const data = await res.json();
+    if (res.ok) {
+      alert(`Estimated Fare: ₹${data.fare}`);
+      console.log("Fare:", data.fare);
+    } else {
+      console.error(data.message || data.errors);
+      alert(`Error: ${data.message || "Check console"}`);
+    }
+  } catch (err) {
+    console.error(err);
+    alert("Something went wrong while fetching fare");
+  }
 }
+
+
   useGSAP(() => {
     if (panelOpen) {
       gsap.to(panelRef.current, {
