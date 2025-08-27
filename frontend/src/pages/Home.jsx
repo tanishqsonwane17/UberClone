@@ -26,7 +26,10 @@ const Home = () => {
   const submitHandler = (e) => {
     e.preventDefault();
   };
-
+function findTrip(){
+  setvehiclePanel(true)
+  setpanelOpen(false)
+}
   useGSAP(() => {
     if (panelOpen) {
       gsap.to(panelRef.current, {
@@ -157,6 +160,11 @@ const Home = () => {
 />
 
             </form>
+            <button
+            onClick={findTrip}
+            className="bg-black text-white px-4 py-2 rounded-lg w-full mt-4">
+              Find trip
+            </button>
           </div>
           <div ref={panelRef} className=" bg-white h-0 transition-all duration-500">
 <LocationSearchPanel 

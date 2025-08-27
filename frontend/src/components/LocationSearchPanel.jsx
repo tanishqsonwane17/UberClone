@@ -54,8 +54,8 @@ const LocationSearchPanel = ({
             } else if (activeField === "destination") {
               setDestination(elem);
             }
-            setpanelOpen(false);
-            setvehiclePanel(true);
+            // setpanelOpen(false);
+            // setvehiclePanel(true);
           }}
           className="flex p-3 border-2 border-gray-100 active:border-black rounded-lg items-center justify-start my-2 gap-4"
         >
