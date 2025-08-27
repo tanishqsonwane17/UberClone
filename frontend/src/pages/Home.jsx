@@ -13,7 +13,7 @@ const Home = () => {
   const [destination, setDestination] = useState("");
   const [activeField, setActiveField] = useState("");
   const [panelOpen, setpanelOpen] = useState(false);
-  const [vehicleType, setVehicleType] = useState("");
+  const [selectedVehicle, setSelectedVehicle] = useState("");
   const [fares, setFares] = useState({ car: 0, moto: 0, auto: 0 });
   const [loadingFares, setLoadingFares] = useState(false);
   const vehiclePanelRef = useRef(null);
@@ -211,15 +211,23 @@ async function findTrip() {
 />          </div>
         </div>
         <div ref={vehiclePanelRef} className="fixed w-full z-10 bg-white bottom-0 translate-y-full px-3 py-10 pt-12" >
-<VehiclePanel 
+<VehiclePanel
   fares={fares}
   loadingFares={loadingFares}
   setconfimRidePanel={setconfimRidePanel}
+  setSelectedVehicle={setSelectedVehicle}  // ← ye zaruri hai
   setvehiclePanel={setvehiclePanel}
 />
         </div>
         <div ref={confimRidePanelRef} className="fixed w-full z-10 bg-white bottom-0 translate-y-full px-3 py-6 pt-12"> 
-          <ConfirmRide setconfimRidePanel = {setconfimRidePanel} setvehicleFound = {setvehicleFound}/>
+        <ConfirmRide
+          pickup={pickup}
+  destination={destination}
+  vehicleType={selectedVehicle}  // "car" ya "moto" ya "auto"
+  fare={fares[selectedVehicle]}  // selected vehicle ka exact fare
+  setvehicleFound={setvehicleFound}
+  setconfimRidePanel={setconfimRidePanel}
+        />
         </div>
         <div ref={vehicleFoundRef} className="fixed w-full z-10 bg-white bottom-0 translate-y-full px-3 py-6 pt-12"> 
           <LookingForDriver setvehicleFound = {setvehicleFound}/>
