@@ -11,6 +11,7 @@ import WaitingForDriverComponent from "../components/WaitingForDriver";
 const Home = () => {
   const [pickup, setpickup] = useState("");
   const [destination, setDestination] = useState("");
+  const [activeField, setActiveField] = useState("");
   const [panelOpen, setpanelOpen] = useState(false);
   const vehiclePanelRef = useRef(null);
   const confimRidePanelRef = useRef(null);
@@ -132,26 +133,41 @@ const Home = () => {
             <form onSubmit={submitHandler}>
               <div className="line absolute h-16 w-1 top-[45%] left-10 bg-gray-900 rounded-b-full"></div>
               <input
-                value={pickup}
-                onClick={() => setpanelOpen(true)}
-                onChange={(e) => setpickup(e.target.value)}
-                className="bg-[#eee] px-12 py-2 text-lg rounded-lg mt-5 w-full"
-                type="text"
-                placeholder="Add a pickup location"
-              />
-              <input
-                value={destination}
-                onClick={() => setpanelOpen(true)}
-                onChange={(e) => setDestination(e.target.value)}
-                className="bg-[#eee] px-12 py-2 text-lg rounded-lg mt-3 w-full"
-                type="text"
-                placeholder="Enter your destination"
-              />
+  value={pickup}
+  onClick={() => {
+    setpanelOpen(true);
+    setActiveField("pickup");
+  }}
+  onChange={(e) => setpickup(e.target.value)}
+  className="bg-[#eee] px-12 py-2 text-lg rounded-lg mt-5 w-full"
+  type="text"
+  placeholder="Add a pickup location"
+/>
+
+<input
+  value={destination}
+  onClick={() => {
+    setpanelOpen(true);
+    setActiveField("destination");
+  }}
+  onChange={(e) => setDestination(e.target.value)}
+  className="bg-[#eee] px-12 py-2 text-lg rounded-lg mt-3 w-full"
+  type="text"
+  placeholder="Enter your destination"
+/>
+
             </form>
           </div>
           <div ref={panelRef} className=" bg-white h-0 transition-all duration-500">
-            <LocationSearchPanel setpanelOpen={setpanelOpen} setvehiclePanel={setvehiclePanel} />
-          </div>
+<LocationSearchPanel 
+  setpanelOpen={setpanelOpen} 
+  setvehiclePanel={setvehiclePanel}
+  pickup={pickup}
+  destination={destination}
+  setpickup={setpickup}
+  setDestination={setDestination}
+  activeField={activeField}
+/>          </div>
         </div>
         <div ref={vehiclePanelRef} className="fixed w-full z-10 bg-white bottom-0 translate-y-full px-3 py-10 pt-12" >
           <VehiclePanel setconfimRidePanel = {setconfimRidePanel} setvehiclePanel={setvehiclePanel} />
