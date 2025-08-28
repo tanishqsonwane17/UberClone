@@ -13,9 +13,8 @@ const Home = () => {
   const [destination, setDestination] = useState("");
   const [activeField, setActiveField] = useState("");
   const [panelOpen, setpanelOpen] = useState(false);
-  const [vehiclePa, setVehicleType] = useState("");
+  const [vehicleType, setVehicleType] = useState("");
   const [selectedVehicle, setSelectedVehicle] = useState(null);
-const [confirmRidePanel, setConfirmRidePanel] = useState(false);
   const [fares, setFares] = useState({ car: 0, moto: 0, auto: 0 });
   const [loadingFares, setLoadingFares] = useState(false);
   const vehiclePanelRef = useRef(null);
@@ -151,7 +150,7 @@ async function findTrip() {
         />
         <div
           onClick={() => {
-            setvehiclePanel(false);
+            setVehiclePanel(false);
           }}
           className="h-screen w-full"
         >
@@ -217,22 +216,23 @@ async function findTrip() {
 />          </div>
         </div>
         <div ref={vehiclePanelRef} className="fixed w-full z-10 bg-white bottom-0 translate-y-full px-3 py-10 pt-12" >
-<VehiclePanel 
-  fares={fares}
-  loadingFares={loadingFares}
-  setconfimRidePanel={setConfirmRidePanel}
-  setSelectedVehicle={setSelectedVehicle}
-/>
+        <VehiclePanel
+          fares={fares}
+          loadingFares={loadingFares}
+          setconfimRidePanel={setconfimRidePanel}
+          setVehiclePanel={setVehiclePanel}
+          setSelectedVehicle={setSelectedVehicle}
+        />
         </div>
         <div ref={confimRidePanelRef} className="fixed w-full z-10 bg-white bottom-0 translate-y-full px-3 py-6 pt-12"> 
-{confirmRidePanel && (
-  <ConfirmRide 
-    setvehiclePanel={setVehiclePanel}
-    setconfimRidePanel={setConfirmRidePanel}
-    setvehicleFound={setvehicleFound}
-    selectedVehicle={selectedVehicle}
-  />
-)}        </div>
+       <ConfirmRide
+          pickup={pickup}
+          destination={destination}
+          selectedVehicle={selectedVehicle}
+          fare={fares[selectedVehicle?.type]}
+          setconfimRidePanel={setconfimRidePanel}
+          setvehicleFound={setvehicleFound}
+        /></div>
         <div ref={vehicleFoundRef} className="fixed w-full z-10 bg-white bottom-0 translate-y-full px-3 py-6 pt-12"> 
           <LookingForDriver setvehicleFound = {setvehicleFound}/>
         </div>
