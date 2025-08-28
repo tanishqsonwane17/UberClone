@@ -13,7 +13,6 @@ const Home = () => {
   const [destination, setDestination] = useState("");
   const [activeField, setActiveField] = useState("");
   const [panelOpen, setpanelOpen] = useState(false);
-  const [vehicleType, setVehicleType] = useState("");
   const [selectedVehicle, setSelectedVehicle] = useState(null);
   const [fares, setFares] = useState({ car: 0, moto: 0, auto: 0 });
   const [loadingFares, setLoadingFares] = useState(false);
@@ -62,6 +61,7 @@ async function findTrip() {
     setLoadingFares(false); // ⬅️ loading end
   }
 }
+
 
   useGSAP(() => {
     if (panelOpen) {
@@ -139,6 +139,14 @@ async function findTrip() {
       });
     }
   }, [WaitingForDriver]);
+// panels ke refs aur state hooks ke baad
+useGSAP(() => {
+  if (vehicleFound) {
+    gsap.to(vehicleFoundRef.current, { y: 0, duration: 0.5, ease: "power3.out" });
+  } else {
+    gsap.to(vehicleFoundRef.current, { y: "100%", duration: 0.5, ease: "power3.in" });
+  }
+}, [vehicleFound]);
 
   return (
     <>
@@ -215,7 +223,7 @@ async function findTrip() {
   activeField={activeField}
 />          </div>
         </div>
-        <div ref={vehiclePanelRef} className="fixed w-full z-10 bg-white bottom-0 translate-y-full px-3 py-10 pt-12" >
+<div ref={vehiclePanelRef} className="fixed w-full z-10 bg-white bottom-0 px-3 py-10 pt-12">
         <VehiclePanel
           fares={fares}
           loadingFares={loadingFares}
@@ -234,7 +242,15 @@ async function findTrip() {
           setvehicleFound={setvehicleFound}
         /></div>
         <div ref={vehicleFoundRef} className="fixed w-full z-10 bg-white bottom-0 translate-y-full px-3 py-6 pt-12"> 
-          <LookingForDriver setvehicleFound = {setvehicleFound}/>
+<LookingForDriver 
+  pickup={pickup}
+  destination={destination}
+  selectedVehicle={selectedVehicle} 
+  setVehiclePanel={setVehiclePanel} 
+  fare={fares}
+  setvehicleFound={setvehicleFound}
+/>
+
         </div>
         <div ref={WaitingForDriverRef} className="fixed w-full z-10 bg-white bottom-0  px-3 py-6 pt-12"> 
          <WaitingForDriverComponent WaitingForDriver={WaitingForDriver} />       

@@ -1,36 +1,48 @@
-import {React,useState} from 'react';
-import { Link } from 'react-router-dom';
-import CaptainRiding from '../pages/CaptainRiding';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
-const ConfirmRidePopup = (props) => {
-  const [Otp, setOtp] = useState('')
+const ConfirmRidePopup = ({
+  pickup,
+  destination,
+  vehicleType,
+  fare,
+  setConfirmRidePopupPanel,
+  setRidePopupPanel,
+}) => {
+  const [otp, setOtp] = useState("");
+
+  const vehicleImages = {
+    car: "https://www.uber-assets.com/image/upload/f_auto,q_auto:eco,c_fill,h_368,w_552/v1732205766/assets/cf/a0f75d-4412-4491-bb81-0114c4b9f2fc/original/Comfort.png",
+    moto: "https://www.uber-assets.com/image/upload/f_auto,q_auto:eco,c_fill,h_368,w_552/v1649231091/assets/2c/7fa194-c954-49b2-9c6d-a3b8601370f5/original/Uber_Moto_Orange_312x208_pixels_Mobile.png",
+    auto: "https://www.uber-assets.com/image/upload/f_auto,q_auto:eco,c_fill,h_368,w_552/v1648431773/assets/1d/db8c56-0204-4ce4-81ce-56a11a07fe98/original/Uber_Auto_558x372_pixels_Desktop.png",
+  };
+
   const submitHandler = (e) => {
     e.preventDefault();
-  }
+    // OTP verification logic yahan add kar sakte ho
+  };
+
   return (
-    <>
-    <div >
-       <h5
-        onClick={() => props.setConfirmridePopupPanel(false)}
+    <div>
+      {/* Close Icon */}
+      <h5
+        onClick={() => setConfirmRidePopupPanel(false)}
         className="p-1 text-center w-[93%] absolute top-0"
       >
         <i className="ri-arrow-down-wide-fill text-3xl text-gray-400"></i>
       </h5>
 
-      {/* Ride Heading */}
-      <h3 className="text-2xl font-semibold mb-5 mt-10">Confirm this ride to Start</h3>
+      <h3 className="text-2xl font-semibold mb-5 mt-10">
+        Confirm your Ride
+      </h3>
 
-      {/* Rider Info */}
-      <div className="flex justify-between items-center p-3 bg-yellow-300 rounded-xl mt-4">
-        <div className="flex items-center gap-3">
-          <img
-            className="h-12 w-12 rounded-full object-cover"
-            src="https://images.unsplash.com/photo-1618306842557-a2515acf2112"
-            alt="User"
-          />
-          <h2 className="text-lg font-medium">Bixi  </h2>
-        </div>
-        <h5 className="text-lg font-semibold">2.2 KM</h5>
+      {/* Vehicle Image */}
+      <div className="flex justify-center">
+        <img
+          className="h-30"
+          src={vehicleImages[vehicleType]}
+          alt={vehicleType}
+        />
       </div>
 
       {/* Ride Details */}
@@ -39,60 +51,62 @@ const ConfirmRidePopup = (props) => {
           <div className="flex items-center gap-5 p-3 border-b border-gray-400">
             <i className="ri-map-pin-user-fill"></i>
             <div>
-              <h3 className="text-lg font-medium">562/11-A</h3>
-              <p className="-mt-1 text-gray-600 text-sm">Kankariya Talab, Ahmedabad</p>
+              <h3 className="text-lg font-medium">{pickup}</h3>
             </div>
           </div>
 
           <div className="flex items-center gap-5 p-3 border-b border-gray-400">
-            <i className="text-lg ri-map-pin-2-fill"></i>
+            <i className="ri-map-pin-2-fill"></i>
             <div>
-              <h3 className="text-lg font-medium">562/11-A</h3>
-              <p className="-mt-1 text-gray-600 text-sm">Kankariya Talab, Ahmedabad</p>
+              <h3 className="text-lg font-medium">{destination}</h3>
             </div>
           </div>
 
           <div className="flex items-center gap-5 p-3">
             <i className="ri-currency-line"></i>
             <div>
-              <h3 className="text-lg font-medium">₹ 193.20</h3>
+              <h3 className="text-lg font-medium">₹ {fare}</h3>
               <p className="-mt-1 text-gray-600 text-sm">Cash</p>
             </div>
           </div>
         </div>
 
-        {/* Accept Button */}
-         <form >
-         </form>
-        <div className='mt-6 w-full'>
-           <form onSubmit={(e)=>{
-            submitHandler(e)
-           }}>
-            <input value={Otp} onChange={(e)=>{
-                e.target.value
-            }} type="Number" placeholder='Enter OTP' className='bg-[#eee] px-6 py-4 text-lg font-mono rounded-lg mt-3 w-full'/>
-             <Link to={'/captain-riding'} onClick={() => {
-           props.setConfirmRidePopupPanel(true);  // Close confirm popup
-           props.setRidePopupPanel(true);          // Open accept popup
-          }} className="w-full text-lg flex justify-center items-center mt-3 bg-green-600 text-white font-semibold p-3 rounded-lg"  >
-          Confirm
-        </Link>
-        {/* Ignore Button */}
-        <button 
-          onClick={() => {
-           props.setConfirmRidePopupPanel(false);
-           props.setRidePopupPanel(false)
-        //    props.setRidePopupPanel(false);
-          }} className="w-full text-lg mt-1 bg-red-600 text-white font-semibold p-3 rounded-lg" >
-          Cancel
-        </button>
+        {/* OTP Input */}
+        <form onSubmit={submitHandler} className="w-full mt-5">
+          <input
+            value={otp}
+            onChange={(e) => setOtp(e.target.value)}
+            type="number"
+            placeholder="Enter OTP"
+            className="bg-[#eee] px-6 py-4 text-lg font-mono rounded-lg mt-3 w-full"
+          />
 
-           </form>
-        </div>
+          {/* Confirm Button */}
+          <Link
+            to={"/captain-riding"}
+            onClick={() => {
+              setConfirmRidePopupPanel(false);
+              setRidePopupPanel(true);
+            }}
+            className="w-full text-lg flex justify-center items-center mt-3 bg-green-600 text-white font-semibold p-3 rounded-lg"
+          >
+            Confirm
+          </Link>
+
+          {/* Cancel Button */}
+          <button
+            type="button"
+            onClick={() => {
+              setConfirmRidePopupPanel(false);
+              setRidePopupPanel(false);
+            }}
+            className="w-full text-lg mt-1 bg-red-600 text-white font-semibold p-3 rounded-lg"
+          >
+            Cancel
+          </button>
+        </form>
       </div>
-
     </div>
-    </>
   );
 };
 
