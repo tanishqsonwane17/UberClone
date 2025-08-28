@@ -45,8 +45,9 @@ const LookingForDriver = (props) => {
   <i className="ri-currency-line"></i>
   <div>
     <h3 className='text-lg font-medium'>
-      ₹ {fare[selectedVehicle?.name]}
-    </h3>
+  ₹ {fare[selectedVehicle?.type]}
+</h3>
+
     <p className='-mt-1 text-gray-600 text-sm'>Cash</p>
   </div>
 </div>
