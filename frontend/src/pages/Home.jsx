@@ -13,7 +13,9 @@ const Home = () => {
   const [destination, setDestination] = useState("");
   const [activeField, setActiveField] = useState("");
   const [panelOpen, setpanelOpen] = useState(false);
-  const [vehicleType, setVehicleType] = useState("");
+  const [vehiclePa, setVehicleType] = useState("");
+  const [selectedVehicle, setSelectedVehicle] = useState(null);
+const [confirmRidePanel, setConfirmRidePanel] = useState(false);
   const [fares, setFares] = useState({ car: 0, moto: 0, auto: 0 });
   const [loadingFares, setLoadingFares] = useState(false);
   const vehiclePanelRef = useRef(null);
@@ -22,7 +24,7 @@ const Home = () => {
   const WaitingForDriverRef = useRef(null);
   const panelRef = useRef(null);
   const panelCloseRef = useRef(null);
-  const [vehiclePanel, setvehiclePanel] = useState(false);
+  const [vehiclePanel, setVehiclePanel] = useState(false);
   const [confimRidePanel, setconfimRidePanel] = useState(false)
   const [vehicleFound, setvehicleFound] = useState(false)
   const [WaitingForDriver,setWaitingForDriver] = useState(false)
@@ -30,7 +32,7 @@ const Home = () => {
     e.preventDefault();
   };
 async function findTrip() {
-  setvehiclePanel(true);
+  setVehiclePanel(true);
   setpanelOpen(false);
 
   if (!pickup || !destination) {
@@ -100,16 +102,20 @@ async function findTrip() {
   }, [vehiclePanel]);
 
   useGSAP(() => {
-    if (confimRidePanel) {
-      gsap.to(confimRidePanelRef.current, {
-        transform: "translateY(0)",
-      });
-    } else {
-      gsap.to(confimRidePanelRef.current, {
-        transform: "translateY(100%)",
-      });
-    }
-  }, [confimRidePanel]);
+  if (confimRidePanel) {
+    gsap.to(confimRidePanelRef.current, {
+      y: 0,
+      duration: 0.5,
+      ease: "power3.out"
+    });
+  } else {
+    gsap.to(confimRidePanelRef.current, {
+      y: "100%",
+      duration: 0.5,
+      ease: "power3.in"
+    });
+  }
+}, [confimRidePanel]);
 
   useGSAP(() => {
     if (vehicleFound) {
@@ -202,7 +208,7 @@ async function findTrip() {
           <div ref={panelRef} className=" bg-white h-0 transition-all duration-500">
 <LocationSearchPanel 
   setpanelOpen={setpanelOpen} 
-  setvehiclePanel={setvehiclePanel}
+  setvehiclePanel={setVehiclePanel}
   pickup={pickup}
   destination={destination}
   setpickup={setpickup}
@@ -214,13 +220,19 @@ async function findTrip() {
 <VehiclePanel 
   fares={fares}
   loadingFares={loadingFares}
-  setconfimRidePanel={setconfimRidePanel}
-  setvehiclePanel={setvehiclePanel}
+  setconfimRidePanel={setConfirmRidePanel}
+  setSelectedVehicle={setSelectedVehicle}
 />
         </div>
         <div ref={confimRidePanelRef} className="fixed w-full z-10 bg-white bottom-0 translate-y-full px-3 py-6 pt-12"> 
-          <ConfirmRide setconfimRidePanel = {setconfimRidePanel} setvehicleFound = {setvehicleFound}/>
-        </div>
+{confirmRidePanel && (
+  <ConfirmRide 
+    setvehiclePanel={setVehiclePanel}
+    setconfimRidePanel={setConfirmRidePanel}
+    setvehicleFound={setvehicleFound}
+    selectedVehicle={selectedVehicle}
+  />
+)}        </div>
         <div ref={vehicleFoundRef} className="fixed w-full z-10 bg-white bottom-0 translate-y-full px-3 py-6 pt-12"> 
           <LookingForDriver setvehicleFound = {setvehicleFound}/>
         </div>

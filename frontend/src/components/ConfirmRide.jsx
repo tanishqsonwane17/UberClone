@@ -9,7 +9,7 @@ const ConfirmRide = (props) => {
       </h5>
       <h3 className="text-2xl font-semibold mb-5 mt-10">Confirm your Ride</h3>
       <div className='flex gap-2 justify-between flex-col items-center '>
-        <img className='h-30 ' src="https://www.uber-assets.com/image/upload/f_auto,q_auto:eco,c_fill,h_368,w_552/v1732205766/assets/cf/a0f75d-4412-4491-bb81-0114c4b9f2fc/original/Comfort.png" alt="" />
+        <img className='h-30' src={props.selectedVehicle?.img} alt="" />
         <div className='w-full mt-5'>
           <div className='flex items-center gap-5 p-3 border-b-1 border-gray-400'>
             <i className="ri-map-pin-user-fill"></i>
@@ -29,8 +29,8 @@ const ConfirmRide = (props) => {
             <div className='flex items-center gap-5 p-3 '>
           <i className="ri-currency-line"></i>
             <div>
-              <h3 className='text-lg font-medium'>₹ 193.20</h3>
-              <p  className='-mt-1 text-gray-600 text-sm'>Cash Cash</p>
+               <h3 className='text-lg font-medium'>₹ {props.selectedVehicle?.fare}</h3>
+               <p className='-mt-1 text-gray-600 text-sm'>Cash</p>
             </div>
 
             </div>
