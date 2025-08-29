@@ -16,7 +16,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 
 app.get('/',function(req,res){
-    res.send('helo world')
+    res.send('')
 })
 app.use('/captains',captainRoute)
 app.use('/users',userRoute)

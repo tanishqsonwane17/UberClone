@@ -25,7 +25,6 @@ const token = req.cookies.token  ||  req.headers.authorization?.split(' ')[1];
   } catch (error) {
     return res.status(401).json({ message: 'Unauthorized' });
   }
-  
 };
 module.exports.authCaptain = async (req, res, next) => {
   const token = req.cookies.token || req.headers.authorization?.split(' ')[1];
