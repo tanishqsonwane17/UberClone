@@ -1,6 +1,5 @@
 const axios = require("axios");
 
-// Helper to format duration in days/hours/minutes
 function formatDuration(seconds) {
   const days = Math.floor(seconds / (3600 * 24));
   const hours = Math.floor((seconds % (3600 * 24)) / 3600);
@@ -13,8 +12,6 @@ function formatDuration(seconds) {
 
   return parts.length > 0 ? parts.join(" ") : "0 min";
 }
-
-// ✅ Get coordinates from address
 async function getAddressCoordinates(address) {
   try {
     const response = await axios.get("https://nominatim.openstreetmap.org/search", {
@@ -32,7 +29,6 @@ async function getAddressCoordinates(address) {
     return { success: false, message: "Internal Server Error", error: error.message };
   }
 }
-
 async function getDistanceTime(origin, destination) {
   try {
     const originCoords = await getAddressCoordinates(origin);
@@ -93,5 +89,4 @@ async function getAutoCompleteSuggestions(input) {
     return { success: false, message: "Error fetching suggestions", error: error.message };
   }
 }
-
 module.exports = { getDistanceTime, getAddressCoordinates, getAutoCompleteSuggestions };
