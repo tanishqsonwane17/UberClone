@@ -1,4 +1,6 @@
 const { Server } = require("socket.io");
+const captainModel = require('./models/captain.model')
+const userModel = require('./models/user.model')
 let io = null;
 function initializeSocket(server) {
   io = new Server(server, {
@@ -10,7 +12,15 @@ function initializeSocket(server) {
 
   io.on("connection", (socket) => {
     console.log("Socket connected:", socket.id);
-
+    socket.on("join", async (data) => {
+         const {userId,userType} = data
+         if(userType === 'captain'){
+            await captainModel.findOneAndUpdate({ socketId: socket.id }, { socketId: socket.id });
+         }
+         else if(userType === 'user'){
+            await userModel.findOneAndUpdate({  userId }, { socketId: socket.id });
+         }
+    })
     socket.on("disconnect", () => {
       console.log("Socket disconnected:", socket.id);
     });
