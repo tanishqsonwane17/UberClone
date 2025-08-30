@@ -11,7 +11,8 @@ module.exports.createRide = async(req,res)=>{
      const ride = await rideService.createRide({user:req.user._id,pickup,destination,vehicleType})
     const pickupCoordinates = await mapService.getAddressCoordinates(pickup)
     console.log(pickup)
-    const getCaptainsInTheRadius = await mapService.getCaptainsInTheRadius()
+    const captainRadius = await mapService.getCaptainsInTheRadius(pickupCoordinates.lat, pickupCoordinates.lon, 2)
+    console.log(captainRadius)
     console.log(pickupCoordinates)
      
 
