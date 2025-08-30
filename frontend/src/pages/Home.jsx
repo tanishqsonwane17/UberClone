@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext, useEffect } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import "remixicon/fonts/remixicon.css";
@@ -7,8 +7,12 @@ import VehiclePanel from "../components/VehiclePanel";
 import ConfirmRide from "../components/ConfirmRide";
 import LookingForDriver from "../components/LookingForDriver";
 import WaitingForDriverComponent from "../components/WaitingForDriver";
-
+import { SocketContext } from "../Context/SocketContext";
+import { UserDataContext } from "../Context/UserContext";
 const Home = () => {
+  
+  const {socketRef} = useContext(SocketContext);
+ const {user} = useContext(UserDataContext)
   const [pickup, setpickup] = useState("");
   const [destination, setDestination] = useState("");
   const [activeField, setActiveField] = useState("");
@@ -26,6 +30,15 @@ const Home = () => {
   const [confimRidePanel, setconfimRidePanel] = useState(false)
   const [vehicleFound, setvehicleFound] = useState(false)
   const [WaitingForDriver,setWaitingForDriver] = useState(false)
+
+
+useEffect(() => {
+  if (user && user._id && socketRef.current) {
+    socketRef.current.emit("join", { userType: "user", userId: user._id });
+    console.log("📡 Join event sent:", user._id, "socket:", socketRef.current.id);
+  }
+}, [user, socketRef]);
+
   const submitHandler = (e) => {
     e.preventDefault();
   };
@@ -139,7 +152,7 @@ async function findTrip() {
       });
     }
   }, [WaitingForDriver]);
-// panels ke refs aur state hooks ke baad
+
 useGSAP(() => {
   if (vehicleFound) {
     gsap.to(vehicleFoundRef.current, { y: 0, duration: 0.5, ease: "power3.out" });

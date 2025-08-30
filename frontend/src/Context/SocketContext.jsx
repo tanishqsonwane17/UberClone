@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
-import { io } from 'socket.io-client';
+import React, { createContext, useContext, useEffect, useRef } from "react";
+import { io } from "socket.io-client";
 
 export const SocketContext = createContext();
 
@@ -7,46 +7,28 @@ const SOCKET_URL = import.meta.env.VITE_BASE_URL;
 
 const SocketProvider = ({ children }) => {
   const socketRef = useRef(null);
-  const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    const newSocket = io(SOCKET_URL, {
-      transports: ['websocket'],
+    socketRef.current = io(SOCKET_URL, {
+      transports: ["websocket"],
       withCredentials: true,
     });
 
-    socketRef.current = newSocket;
-    setSocket(newSocket);
-
-    newSocket.on('connect', () => {
-      console.log('✅ Socket connected:', newSocket.id);
+    socketRef.current.on("connect", () => {
+      console.log(" Socket connected:", socketRef.current.id);
     });
 
-    newSocket.on('disconnect', () => {
-      console.log('❌ Socket disconnected');
+    socketRef.current.on("disconnect", () => {
+      console.log(" Socket disconnected");
     });
 
     return () => {
-      newSocket.disconnect();
+      socketRef.current.disconnect();
     };
   }, []);
 
-  const sendMessage = (event, data) => {
-    if (socketRef.current) {
-      socketRef.current.emit(event, data);
-    }
-  };
-
-  const onMessage = (event, callback) => {
-    if (socketRef.current) {
-      socketRef.current.on(event, callback);
-      return () => socketRef.current.off(event, callback);
-    }
-    return () => {};
-  };
-
   return (
-    <SocketContext.Provider value={{ sendMessage, onMessage, socket }}>
+    <SocketContext.Provider value={{socketRef }}>
       {children}
     </SocketContext.Provider>
   );
