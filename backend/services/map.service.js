@@ -1,5 +1,5 @@
 const axios = require("axios");
-
+const captainModel = require("../models/captain.model");
 function formatDuration(seconds) {
   const days = Math.floor(seconds / (3600 * 24));
   const hours = Math.floor((seconds % (3600 * 24)) / 3600);
@@ -89,4 +89,13 @@ async function getAutoCompleteSuggestions(input) {
     return { success: false, message: "Error fetching suggestions", error: error.message };
   }
 }
-module.exports = { getDistanceTime, getAddressCoordinates, getAutoCompleteSuggestions };
+
+async function getCaptainsInTheRadius (ltd,lng,radius){
+location:{
+  $geoWithin: {
+    $centerSphere: [[lng, ltd], radius / 3963.2]
+  }
+}
+};
+
+module.exports = { getDistanceTime, getAddressCoordinates, getAutoCompleteSuggestions, getCaptainsInTheRadius };

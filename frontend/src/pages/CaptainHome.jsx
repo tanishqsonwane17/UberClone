@@ -21,10 +21,36 @@ const { captain } = useContext(CaptainDataContext);
 
 useEffect(() => {
   if (socket && captain?._id) {
+    // join event bhejna
     socket.emit("join", {
       userType: "captain",
       userId: captain._id
     });
+
+    // Browser se location permission lena
+    if ("geolocation" in navigator) {
+      const watchId = navigator.geolocation.watchPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          console.log("📍 Captain Location:", latitude, longitude);
+
+          // Location ko backend bhejna
+          socket.emit("update-location-captain", {
+            userId: captain._id,
+            location: { lat: latitude, lng: longitude }
+          });
+        },
+        (error) => {
+          console.error("❌ Error getting location:", error);
+        },
+        { enableHighAccuracy: true, maximumAge: 0, timeout: 5000 }
+      );
+
+      // cleanup
+      return () => navigator.geolocation.clearWatch(watchId);
+    } else {
+      console.log("⚠️ Geolocation not supported by this browser");
+    }
   }
 }, [socket, captain]);
 
