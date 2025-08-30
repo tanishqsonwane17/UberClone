@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useRef } from "react";
+import React, { createContext, useContext, useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
 
 export const SocketContext = createContext();
@@ -6,29 +6,31 @@ export const SocketContext = createContext();
 const SOCKET_URL = import.meta.env.VITE_BASE_URL;
 
 const SocketProvider = ({ children }) => {
-  const socketRef = useRef(null);
+  const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    socketRef.current = io(SOCKET_URL, {
+    const newSocket = io(SOCKET_URL, {
       transports: ["websocket"],
       withCredentials: true,
     });
 
-    socketRef.current.on("connect", () => {
-      console.log(" Socket connected:", socketRef.current.id);
+    setSocket(newSocket);
+
+    newSocket.on("connect", () => {
+      console.log("✅ Socket connected:", newSocket.id);
     });
 
-    socketRef.current.on("disconnect", () => {
-      console.log(" Socket disconnected");
+    newSocket.on("disconnect", () => {
+      console.log("❌ Socket disconnected");
     });
 
     return () => {
-      socketRef.current.disconnect();
+      newSocket.disconnect();
     };
   }, []);
 
   return (
-    <SocketContext.Provider value={{socketRef }}>
+    <SocketContext.Provider value={socket}>
       {children}
     </SocketContext.Provider>
   );

@@ -18,8 +18,7 @@ const LocationSearchPanel = ({
       return;
     }
     try {
-      const res = await axios.get(
-        `http://localhost:3000/maps/get-suggetions?input=${query}`,
+      const res = await axios.get(`http://localhost:3000/maps/get-suggetions?input=${query}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
