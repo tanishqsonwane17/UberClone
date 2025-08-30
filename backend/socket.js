@@ -18,10 +18,10 @@ function initializeSocket(server) {
     socket.on("join", async (data) => {
   try {
     const { userId, userType } = data;
-    console.log("📥 Join event received:", data);
+    console.log(" Join event received:", data);
 
     if (!userId) {
-      console.log("⚠️ userId missing");
+      console.log(" userId missing");
       return;
     }
 
@@ -31,39 +31,35 @@ function initializeSocket(server) {
         { socketId: socket.id },
         { new: true }
       );
-      console.log("✅ Captain updated:", result);
+      console.log(" Captain updated:", result);
     } else if (userType === "user") {
       const result = await userModel.findOneAndUpdate(
         { _id: userId },
         { socketId: socket.id },
         { new: true }
       );
-      console.log("✅ User updated:", result);
+      console.log(" User updated:", result);
     }
   } catch (err) {
-    console.error("❌ Error in join:", err.message);
+    console.error(" Error in join:", err.message);
   }
 });
 
 socket.on('update-location-captain', async (data) => {
   const { userId, location } = data; 
-  if (!userId || !location) {
-    console.log(" userId or location missing");
+  if (!userId || !location || typeof location.ltd !== "number" || typeof location.lng !== "number") {
+    console.log(" userId or location missing/invalid", data);
     return;
   }
 
-if(!location || location.ltd || location.lng){
-  return socket.emit('error', 'Invalid location data');
-}
+  const result = await captainModel.findOneAndUpdate(
+    { _id: userId },
+    { $set: { location } },   // direct use location: { ltd, lng }
+    { new: true }
+  );
 
-
-  await captainModel.findOneAndUpdate(userId, {
-    location: {
-      ltd: location.ltd,
-      lng: location.lng
-    }
-  });
-})
+  console.log(" Captain location updated:", result);
+});
 
 
     socket.on("disconnect", () => {

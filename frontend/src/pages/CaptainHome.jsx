@@ -20,39 +20,44 @@ const CaptainHome = () => {
 const { captain } = useContext(CaptainDataContext);
 
 useEffect(() => {
-  if (socket && captain?._id) {
-    // join event bhejna
-    socket.emit("join", {
-      userType: "captain",
-      userId: captain._id
-    });
+  if (!socket || !captain?._id) return;
 
-    // Browser se location permission lena
-    if ("geolocation" in navigator) {
-      const watchId = navigator.geolocation.watchPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          console.log("📍 Captain Location:", latitude, longitude);
+  socket.emit("join", {
+    userType: "captain",
+    userId: captain._id,
+  });
 
-          // Location ko backend bhejna
-          socket.emit("update-location-captain", {
-            userId: captain._id,
-            location: { lat: latitude, lng: longitude }
-          });
-        },
-        (error) => {
-          console.error("❌ Error getting location:", error);
-        },
-        { enableHighAccuracy: true, maximumAge: 0, timeout: 5000 }
-      );
+  if ("geolocation" in navigator) {
+    const watchId = navigator.geolocation.watchPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
 
-      // cleanup
-      return () => navigator.geolocation.clearWatch(watchId);
-    } else {
-      console.log("⚠️ Geolocation not supported by this browser");
-    }
+        console.log("📍 Captain Location:", latitude, longitude);
+
+        socket.emit("update-location-captain", {
+          userId: captain._id,
+          location: { ltd: latitude, lng: longitude },
+        });
+      },
+      (error) => {
+        console.error("❌ Error getting location:", error);
+      },
+      {
+        enableHighAccuracy: true,
+        maximumAge: 0,
+        timeout: 5000,
+      }
+    );
+
+    // ✅ Cleanup on unmount
+    return () => {
+      navigator.geolocation.clearWatch(watchId);
+      console.log("🛑 Stopped watching location");
+    };
+  } else {
+    console.log("⚠️ Geolocation not supported by this browser");
   }
-}, [socket, captain]);
+}, [socket, captain?._id]);
 
 
   // GSAP animation RidePopup
