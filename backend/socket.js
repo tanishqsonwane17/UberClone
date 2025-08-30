@@ -1,28 +1,45 @@
 const { Server } = require("socket.io");
-const captainModel = require('./models/captain.model')
-const userModel = require('./models/user.model')
+const captainModel = require('./models/captain.model');
+const userModel = require('./models/user.model');
+
 let io = null;
+
 function initializeSocket(server) {
   io = new Server(server, {
     cors: {
-      origin: "*",
+      origin: "*", // production me specific domain dalna
       methods: ["GET", "POST"]
     }
   });
 
   io.on("connection", (socket) => {
-    console.log("Socket connected:", socket.id);
+    console.log("✅ Socket connected:", socket.id);
+
     socket.on("join", async (data) => {
-         const {userId,userType} = data
-         if(userType === 'captain'){
-            await captainModel.findOneAndUpdate({ socketId: socket.id }, { socketId: socket.id });
-         }
-         else if(userType === 'user'){
-            await userModel.findOneAndUpdate({  userId }, { socketId: socket.id });
-         }
-    })
+      try {
+        const { userId, userType } = data;
+
+        if (userType === 'captain') {
+          await captainModel.findOneAndUpdate(
+            { _id: userId },
+            { socketId: socket.id }
+          );
+          console.log(`🚕 Captain ${userId} joined with socket ${socket.id}`);
+        } 
+        else if (userType === 'user') {
+          await userModel.findOneAndUpdate(
+            { _id: userId },
+            { socketId: socket.id }
+          );
+          console.log(`🙋 User ${userId} joined with socket ${socket.id}`);
+        }
+      } catch (err) {
+        console.error("❌ Error in join event:", err.message);
+      }
+    });
+
     socket.on("disconnect", () => {
-      console.log("Socket disconnected:", socket.id);
+      console.log("❌ Socket disconnected:", socket.id);
     });
   });
 }
@@ -30,8 +47,8 @@ function initializeSocket(server) {
 function sendMessageToSocket(socketId, message) {
   if (io) {
     io.to(socketId).emit('message', message);
-  } else{
-    console.log("Socket is not initialized");
+  } else {
+    console.log("⚠️ Socket is not initialized");
   }
 }
 
