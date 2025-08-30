@@ -54,7 +54,7 @@ socket.on('update-location-captain', async (data) => {
 
   const result = await captainModel.findOneAndUpdate(
     { _id: userId },
-    { $set: { location } },   // direct use location: { ltd, lng }
+    { $set: { location } },
     { new: true }
   );
 

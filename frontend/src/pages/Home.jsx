@@ -33,7 +33,7 @@ const Home = () => {
 
 
 useEffect(() => {
-  if (user && user._id && socketRef.current) {
+  if (user?._id && socketRef && socketRef.current) {
     socketRef.current.emit("join", { userType: "user", userId: user._id });
     console.log("📡 Join event sent:", user._id, "socket:", socketRef.current.id);
   }

@@ -45,11 +45,10 @@ useEffect(() => {
       {
         enableHighAccuracy: true,
         maximumAge: 0,
-        timeout: 5000,
+        timeout: 10000,
       }
     );
 
-    // ✅ Cleanup on unmount
     return () => {
       navigator.geolocation.clearWatch(watchId);
       console.log("🛑 Stopped watching location");
@@ -60,7 +59,6 @@ useEffect(() => {
 }, [socket, captain?._id]);
 
 
-  // GSAP animation RidePopup
   useGSAP(() => {
     if (RidePopupPanel) {
       gsap.to(RidePopupPanelRef.current, { transform: "translateY(0)" });

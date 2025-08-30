@@ -1,6 +1,6 @@
 const rideService = require('../services/newRide.service')
 const {validationResult}  = require('express-validator')
-
+const mapService  = require('../services/map.service')
 module.exports.createRide = async(req,res)=>{
     const errors = validationResult(req)
     if(!errors.isEmpty()){
@@ -9,7 +9,10 @@ module.exports.createRide = async(req,res)=>{
     const {userId,pickup,destination,vehicleType} = req.body
    try{
      const ride = await rideService.createRide({user:req.user._id,pickup,destination,vehicleType})
-
+    const pickupCoordinates = await mapService.getAddressCoordinates(pickup)
+    console.log(pickup)
+    const getCaptainsInTheRadius = await mapService.getCaptainsInTheRadius()
+    console.log(pickupCoordinates)
      
 
     res.status(200).json({ride})

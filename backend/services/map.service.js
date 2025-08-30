@@ -93,7 +93,7 @@ async function getAutoCompleteSuggestions(input) {
 async function getCaptainsInTheRadius (ltd,lng,radius){
 location:{
   $geoWithin: {
-    $centerSphere: [[lng, ltd], radius / 3963.2]
+    $centerSphere: [[ltd, lng], radius / 6371]
   }
 }
 };
