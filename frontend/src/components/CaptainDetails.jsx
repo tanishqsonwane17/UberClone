@@ -10,7 +10,7 @@ const CaptainDetails = () => {
                   <h4 className='text-lg font-medium capitalize'>
                     {captain?.fullname?.firstname + " " + captain?.fullname?.lastname}
                   </h4>
-             </div>
+                  </div>
                <div>
               <h5 className='text-xl font-semibold'>₹295.2</h5>
               <p className='text-sm text-gray-600 font-medium'>Earned</p>
