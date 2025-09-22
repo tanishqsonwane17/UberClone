@@ -3,7 +3,11 @@ import { createContext, useContext, useState } from 'react';
 export const CaptainDataContext = createContext();
 
 export const CaptainContext = ({ children }) => {
-    const [captain, setCaptain] = useState(null);
+    const [captain, setCaptain] = useState(() => {
+    const savedCaptain = localStorage.getItem('captainData');
+    return savedCaptain ? JSON.parse(savedCaptain) : null;
+});
+
     const [isOnline, setIsOnline] = useState(false);
     const [currentLocation, setCurrentLocation] = useState(null);
     const [currentRide, setCurrentRide] = useState(null);
@@ -35,6 +39,7 @@ export const CaptainContext = ({ children }) => {
         updateCaptainLocation,
         currentRide,
         acceptRide,
+        
         completeRide,
         earnings
     };
