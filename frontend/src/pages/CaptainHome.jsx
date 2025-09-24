@@ -32,7 +32,7 @@ useEffect(() => {
       (position) => {
         const { latitude, longitude } = position.coords;
 
-        console.log("📍 Captain Location:", latitude, longitude);
+        console.log(" Captain Location:", latitude, longitude);
 
         socket.emit("update-location-captain", {
           userId: captain._id,
@@ -40,7 +40,7 @@ useEffect(() => {
         });
       },
       (error) => {
-        console.error("❌ Error getting location:", error);
+        console.error(" Error getting location:", error);
       },
       {
         enableHighAccuracy: true,
@@ -51,10 +51,10 @@ useEffect(() => {
 
     return () => {
       navigator.geolocation.clearWatch(watchId);
-      console.log("🛑 Stopped watching location");
+      console.log(" Stopped watching location");
     };
   } else {
-    console.log("⚠️ Geolocation not supported by this browser");
+    console.log(" Geolocation not supported by this browser");
   }
 }, [socket, captain?._id]);
 

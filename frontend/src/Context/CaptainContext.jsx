@@ -1,54 +1,56 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 
 export const CaptainDataContext = createContext();
 
 export const CaptainContext = ({ children }) => {
-    const [captain, setCaptain] = useState(() => {
+  const [isOnline, setIsOnline] = useState(false);
+  const [currentLocation, setCurrentLocation] = useState(null);
+  const [currentRide, setCurrentRide] = useState(null);
+  const [earnings, setEarnings] = useState(0);
+
+  const [captain, setCaptain] = useState(() => {
     const savedCaptain = localStorage.getItem('captainData');
-    return savedCaptain ? JSON.parse(savedCaptain) : null;
-});
-
-    const [isOnline, setIsOnline] = useState(false);
-    const [currentLocation, setCurrentLocation] = useState(null);
-    const [currentRide, setCurrentRide] = useState(null);
-    const [earnings, setEarnings] = useState(0);
-
-    const updateCaptainLocation = (location) => {
-        setCurrentLocation(location);
+    return savedCaptain ? JSON.parse(savedCaptain) : {
+      email:'',
+      fullName:{ firstname:'', lastname:'' }
     };
+  });
 
-    const toggleOnlineStatus = () => {
-        setIsOnline(!isOnline);
-    };
+  const updateCaptainLocation = (location) => {
+    setCurrentLocation(location);
+  };
 
-    const acceptRide = (ride) => {
-        setCurrentRide(ride);
-    };
+  const toggleOnlineStatus = () => {
+    setIsOnline(!isOnline);
+  };
 
-    const completeRide = (amount) => {
-        setEarnings(prevEarnings => prevEarnings + amount);
-        setCurrentRide(null);
-    };
+  const acceptRide = (ride) => {
+    setCurrentRide(ride);
+  };
 
-    const value = {
-        captain,
-        setCaptain,
-        isOnline,
-        toggleOnlineStatus,
-        currentLocation,
-        updateCaptainLocation,
-        currentRide,
-        acceptRide,
-        
-        completeRide,
-        earnings
-    };
+  const completeRide = (amount) => {
+    setEarnings((prevEarnings) => prevEarnings + amount);
+    setCurrentRide(null);
+  };
 
-    return (
-        <CaptainDataContext.Provider value={value}>
-            {children}
-        </CaptainDataContext.Provider>
-    );
+  const value = {
+    captain,
+    setCaptain,
+    isOnline,
+    toggleOnlineStatus,
+    currentLocation,
+    updateCaptainLocation,
+    currentRide,
+    acceptRide,
+    completeRide,
+    earnings,
+  };
+
+  return (
+    <CaptainDataContext.Provider value={value}>
+      {children}
+    </CaptainDataContext.Provider>
+  );
 };
 
 export default CaptainContext;

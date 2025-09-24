@@ -18,12 +18,16 @@ const Userlogin = () => {
         { email, password }
       )
 
-      if (response.status === 200 || response.status === 201) {
-        const data = response.data
-        setUser(data.user)
-        localStorage.setItem('userToken', data.token)
-        navigate('/home')
-      }
+if (response.status === 200 || response.status === 201) {
+  const data = response.data;
+  setUser(data.user);
+
+  localStorage.setItem('userToken', data.token);   // <-- CHANGE
+  localStorage.setItem('userData', JSON.stringify(data.user));
+
+  navigate('/home');
+}
+
     } catch (error) {
       console.error('Login failed:', error)
       alert('Invalid credentials or server error')

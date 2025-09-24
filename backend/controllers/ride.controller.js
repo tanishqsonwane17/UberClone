@@ -23,18 +23,18 @@ module.exports.createRide = async(req,res)=>{
    }
 }
 
-module.exports.getFare = async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
 
+module.exports.getFare = async (req, res) => {
   const { pickup, destination, vehicleType } = req.body;
 
+  if (!pickup || !destination || !vehicleType) {
+    return res.status(400).json({ success: false, message: "pickup, destination & vehicleType required" });
+  }
+
   try {
-    const fare = await rideService.getFlare(pickup, destination, vehicleType);
-    res.status(200).json({ fare });
+    const result = await rideService.calculateFare(pickup, destination, vehicleType);
+    res.status(200).json(result);
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    res.status(400).json({ success: false, message: err.message });
   }
 };
